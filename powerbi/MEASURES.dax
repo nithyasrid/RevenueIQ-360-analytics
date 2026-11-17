@@ -1,0 +1,9 @@
+-- Import transactions.csv as table 'Transactions'. Set Order Date to Date type.
+-- Create measures separately in Power BI Desktop.
+Revenue = SUMX(FILTER(Transactions, Transactions[status] = "Completed"), Transactions[quantity] * Transactions[unit_price] * (1 - Transactions[discount_pct] / 100))
+Product Cost = SUMX(FILTER(Transactions, Transactions[status] = "Completed"), Transactions[quantity] * Transactions[unit_cost])
+Product Profit = [Revenue] - [Product Cost]
+Profit Margin % = DIVIDE([Product Profit], [Revenue])
+Completed Orders = CALCULATE(DISTINCTCOUNT(Transactions[order_id]), Transactions[status] = "Completed")
+Unique Customers = CALCULATE(DISTINCTCOUNT(Transactions[customer_id]), Transactions[status] = "Completed")
+Return Rate % = DIVIDE(CALCULATE(COUNTROWS(Transactions), Transactions[status] = "Returned"), COUNTROWS(Transactions))
